@@ -9,4 +9,5 @@ A comparative overview of visual decoding paradigms.
 
 
 <img src="fig-framework_00.png" alt="Framework" style="max-width: 80%; height: auto;"/>
+
 Overall Architecture of FLORA.
