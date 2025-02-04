@@ -1,4 +1,18 @@
-# FLORA
+<!-- ## FLORA: A Unified Generalist Model for Visual Brain Decoding via Multi-Modal Neural Embeddings -->
+
+<div align="center">
+
+<h2 style="border-bottom: 1px solid lightgray;">FLORA: A Unified Generalist Model for Visual Brain Decoding via Multi-Modal Neural Embeddings</h2>
+
+<!-- Badges and Links Section -->
+<div style="display: flex; align-items: center; justify-content: center;">
+
+</div>
+
+<br/>
+
+</div>
+
 FLORA: A Unified Generalist Model for Visual Brain Decoding via Multi-Modal Neural Embeddings
 
 
