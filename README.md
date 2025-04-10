@@ -17,7 +17,7 @@ FLORA: A Unified Generalist Model for Visual Brain Decoding via Multi-Modal Neur
 
 
 <!--  -->
-<img src="fig-conceptualization_00.png" alt="fig-genexample" style="max-width: 80%; height: auto;"/>  
+<img src="fig-overview_00.png" alt="fig-genexample" style="max-width: 80%; height: auto;"/>  
 
 A comparative overview of visual decoding paradigms.
 
