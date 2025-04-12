@@ -1,5 +1,3 @@
-<!-- ## FLORA: A Unified Generalist Model for Visual Brain Decoding via Multi-Modal Neural Embeddings -->
-
 <div align="center">
 
 <h2 style="border-bottom: 1px solid lightgray;">BrainFLORA: Uncovering Brain Concept Representation via Multimodal Neural Embeddings</h2>
@@ -24,7 +22,7 @@ A comparative overview of visual decoding paradigms.
 
 <img src="fig-framework_00.png" alt="Framework" style="max-width: 70%; height: auto;"/>
 
-Overall Architecture of FLORA.
+Overall Architecture of BrainFLORA.
 
 
 <!-- ## Environment setup -->
@@ -40,7 +38,7 @@ Run ``setup.sh`` to quickly create a conda environment that contains the package
 You can also create a new conda environment and install the required dependencies by running
 ```
 conda env create -f environment.yml
-conda activate FLORA
+conda activate BrainFLORA
 ```
 
 <!-- ## Prepare for Dataset -->
