@@ -38,7 +38,7 @@ Run ``setup.sh`` to quickly create a conda environment that contains the package
 You can also create a new conda environment and install the required dependencies by running
 ```
 conda env create -f environment.yml
-conda activate BrainFLORA
+conda activate FLORA
 ```
 
 <!-- ## Prepare for Dataset -->
