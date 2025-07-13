@@ -5,56 +5,49 @@ import random
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
-import sys
-# 获取当前工作目录（假设 Notebook 位于 parent_dir）
-current_dir = os.getcwd()
+import importlib.util
 
-# 构建项目根目录的路径（假设 parent_dir 和 model 同级）
+# Set up project root directory (assuming Notebook is in parent_dir)
+current_dir = os.getcwd()
 project_root = os.path.abspath(os.path.join(current_dir, '..'))
 
-# 将项目根目录添加到 sys.path
+# Add project root to sys.path if not already present
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-# 现在可以使用绝对导入
-import importlib.util
-
-# 导入dataset
+# Import fMRI dataset module
 spec = importlib.util.spec_from_file_location(
     "fmri_datasets",
     "/mnt/dataset1/ldy/Workspace/FLORA/data_preparing/fmri_datasets.py"
 )
 dataset_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(dataset_module)
-
-# 获取需要的类
 fMRIDataset = dataset_module.fMRIDataset
 
-sys.path.insert(0,'/mnt/dataset0/ldy/Workspace/EEG_Image_decode_Wrong/Retrieval')
-sys.path.insert(0,'/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval')
-sys.path.insert(0,'/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval/model')
+# Add additional paths for model imports
+sys.path.insert(0, '/mnt/dataset0/ldy/Workspace/EEG_Image_decode_Wrong/Retrieval')
+sys.path.insert(0, '/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval')
+sys.path.insert(0, '/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval/model')
 sys.path.append("/mnt/dataset0/ldy/Workspace/FLORA")
 
-# Configuration
+# Configuration dictionary for model settings
 MODEL_CONFIG = {
-    'model_name': 'MedformerNoTSW',  # 'ATMS', 'MetaEEG', 'NICE', 'EEGNetv4_Encoder', 'MindEyeModule'
-    'mode': 'joint',  # 'in_subject' or 'joint'
+    'model_name': 'MedformerNoTSW',  # Options: 'ATMS', 'MetaEEG', 'NICE', 'EEGNetv4_Encoder', 'MindEyeModule'
+    'mode': 'joint',  # Options: 'in_subject' or 'joint'
 }
 
-# 根据选择的模型导入相应的类
-import importlib.util
-import sys
-
-# 设置基础模块路径
+# Import model class based on configuration
 base_path = "/mnt/dataset0/ldy/Workspace/EEG_Image_decode_Wrong/Retrieval"
 
 def import_from_path(module_name, file_path):
+    """Helper function to import a module from a specific file path."""
     spec = importlib.util.spec_from_file_location(module_name, file_path)
     module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 
+# Import the appropriate model class based on configuration
 if MODEL_CONFIG['model_name'] == 'ATMS':
     atms_module = import_from_path(
         "ATMS_retrieval_joint_and_in_train_fMRI",
@@ -62,43 +55,58 @@ if MODEL_CONFIG['model_name'] == 'ATMS':
     )
     ModelClass = atms_module.ATMS
 else:
-    # 其他所有模型都在 contrast_retrieval_fMRI.py 中
+    # For all other models, import from contrast_retrieval_fMRI.py
     contrast_module = import_from_path(
         "contrast_retrieval_fMRI",
         f"{base_path}/contrast_retrieval_fMRI.py"
     )
     
-    if MODEL_CONFIG['model_name'] == 'MetaEEG':
-        ModelClass = contrast_module.MetaEEG
-    elif MODEL_CONFIG['model_name'] == 'NICE':
-        ModelClass = contrast_module.NICE
-    elif MODEL_CONFIG['model_name'] == 'EEGNetv4_Encoder':
-        ModelClass = contrast_module.EEGNetv4_Encoder
-    elif MODEL_CONFIG['model_name'] == 'MindEyeModule':
-        ModelClass = contrast_module.MindEyeModule
-    elif MODEL_CONFIG['model_name'] == 'MB2CW':
-        ModelClass = contrast_module.MB2CW
-    elif MODEL_CONFIG['model_name'] == 'CogcapW':
-        ModelClass = contrast_module.CogcapW
-    elif MODEL_CONFIG['model_name'] == 'MindBridgeW':
-        ModelClass = contrast_module.MindBridgeW
-    elif MODEL_CONFIG['model_name'] == 'NeV2L':
-        ModelClass = contrast_module.NeV2L
-    elif MODEL_CONFIG['model_name'] == 'WaveW':
-        ModelClass = contrast_module.WaveW
-    elif MODEL_CONFIG['model_name'] == 'MedformerNoTSW':
-        ModelClass = contrast_module.MedformerNoTSW
-    else:
+    # Map model names to their corresponding classes
+    model_class_mapping = {
+        'MetaEEG': contrast_module.MetaEEG,
+        'NICE': contrast_module.NICE,
+        'EEGNetv4_Encoder': contrast_module.EEGNetv4_Encoder,
+        'MindEyeModule': contrast_module.MindEyeModule,
+        'MB2CW': contrast_module.MB2CW,
+        'CogcapW': contrast_module.CogcapW,
+        'MindBridgeW': contrast_module.MindBridgeW,
+        'NeV2L': contrast_module.NeV2L,
+        'WaveW': contrast_module.WaveW,
+        'MedformerNoTSW': contrast_module.MedformerNoTSW
+    }
+    
+    ModelClass = model_class_mapping.get(MODEL_CONFIG['model_name'])
+    if ModelClass is None:
         raise ValueError(f"Unknown model type: {MODEL_CONFIG['model_name']}")
+
+# Import loss function
 from loss import ClipLoss
 
 def extract_id_from_string(s):
+    """Extract numerical ID from a string (e.g., 'sub-01' -> 1)."""
     match = re.search(r'\d+$', s)
     if match:
         return int(match.group())
     return None
 
 def get_fmrifeatures(sub, fmri_model, dataloader, device, text_features_all, img_features_all, k, eval_modality, test_classes):
+    """
+    Evaluate fMRI model performance on retrieval tasks.
+    
+    Args:
+        sub: Subject identifier
+        fmri_model: The fMRI model to evaluate
+        dataloader: DataLoader containing test data
+        device: Device to run computations on
+        text_features_all: All text features for evaluation
+        img_features_all: All image features for evaluation
+        k: Number of classes to consider in evaluation
+        eval_modality: Evaluation modality ('fmri')
+        test_classes: Total number of test classes
+        
+    Returns:
+        Tuple containing average loss, accuracy, top5 accuracy, labels, and features tensor
+    """
     fmri_model.eval()
     text_features_all = text_features_all.to(device).float()
     img_features_all = img_features_all.to(device).float()
@@ -159,16 +167,16 @@ def get_fmrifeatures(sub, fmri_model, dataloader, device, text_features_all, img
     top5_acc = top5_correct_count / total    
     return average_loss, accuracy, top5_acc, labels, features_tensor.cpu()
 
-# ========================================Configuration=============================================
+# ======================================== Configuration =============================================
 test_subjects = ['sub-01', 'sub-02', 'sub-03']
 device_preference = 'cuda:0'
 device_type = 'gpu'
 data_path = "/mnt/dataset0/ldy/datasets/fmri_dataset/Preprocessed"
 device = torch.device(device_preference if device_type == 'gpu' and torch.cuda.is_available() else 'cpu')
 print(f"Using device: {device}")
-# ========================================Configuration=============================================
+# ======================================== Configuration =============================================
 
-# Add mode selection
+# Experiment parameters
 mode = MODEL_CONFIG['mode']
 test_classes = 100
 eval_modality = 'fmri'
@@ -192,11 +200,13 @@ print(f"Number of test classes: {test_classes}")
 print(f"Evaluation modality: {eval_modality}")
 print("="*80 + "\n")
 
+# Main evaluation loop
 for sub in test_subjects:
     print(f"\nProcessing subject: {sub}")
     # Load appropriate model based on mode
     fmri_model = ModelClass()
     base_path = f"/mnt/dataset0/ldy/Workspace/FLORA/models/{MODEL_CONFIG['model_name']}"
+    
     if mode == 'joint':
         across_dir = os.path.join(base_path, 'across', 'fMRI')
         time_folder = os.listdir(across_dir)[0]
@@ -220,7 +230,7 @@ for sub in test_subjects:
     text_features_test_all = test_dataset.text_features    
     img_features_test_all = test_dataset.img_features
     
-    # Run evaluations
+    # Run evaluations with different k values
     test_loss, test_accuracy, top5_acc, labels, fmri_features_test = get_fmrifeatures(
         sub, fmri_model, test_loader, device, text_features_test_all, img_features_test_all, 
         k=test_classes, eval_modality=eval_modality, test_classes=test_classes
@@ -261,6 +271,7 @@ for sub in test_subjects:
     print(f" - v4 Accuracy: {v4_acc:.4f}")
     print(f" - v10 Accuracy: {v10_acc:.4f}")
 
+# Print final summary
 print("\n" + "="*80)
 print(f"EXPERIMENT SUMMARY")
 print(f"Evaluation modality: {eval_modality}")

@@ -1,3 +1,12 @@
+'''
+@File    :   split_meg_rerank.py
+@Time    :   2025/07/13 16:18:34
+@Author  :   DongyangLi
+@Version :   1.0
+@Desc    :   modified from [PAPER_NAME](https://arxiv.org/abs/XXXX.XXXXX) (CONFERENCE_ABBR'YY)
+'''
+
+
 import os
 import pickle
 import numpy as np

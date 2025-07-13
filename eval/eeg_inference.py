@@ -1,48 +1,56 @@
 import os
-os.chdir('/mnt/dataset0/ldy/Workspace/FLORA')
 import sys
 import re
 import random
+import json
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
-import sys
 
-# 配置
+# Configuration dictionary for model settings
 MODEL_CONFIG = {
-    'model_name': 'MedformerNoTSW',  # 'ATMS', 'MetaEEG', 'NICE', 'EEGNetv4_Encoder', 'MindEyeModule'
-    'mode': 'joint',  # 'in_subject' or 'joint'
+    'model_name': 'MedformerNoTSW',  # Options: 'ATMS', 'MetaEEG', 'NICE', 'EEGNetv4_Encoder', 'MindEyeModule'
+    'mode': 'joint',  # Options: 'in_subject' or 'joint'
 }
 
+# Set up project paths
 current_dir = os.getcwd()
 project_root = os.path.abspath(os.path.join(current_dir, '..'))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-import os
-import json
-
-# Load data config
+# Load data configuration
 with open('/mnt/dataset0/ldy/Workspace/FLORA/data_preparing/data_config.json', 'r') as f:
     data_config = json.load(f)
 
+# Add necessary paths to system path
 sys.path.append("/mnt/dataset0/ldy/Workspace/FLORA")
-sys.path.insert(0,'/mnt/dataset0/ldy/Workspace/EEG_Image_decode_Wrong/Retrieval')
-from contrast_retrieval import EEGNetv4_Encoder, MetaEEG, NICE, MindEyeModule, MB2CW, Cogcap, NeV2L, WaveW, MindBridgeW, MedformerNoTSW
-sys.path.insert(0,'/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval')
-sys.path.insert(0,'/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval/model')
+sys.path.insert(0, '/mnt/dataset0/ldy/Workspace/EEG_Image_decode_Wrong/Retrieval')
+from contrast_retrieval import (EEGNetv4_Encoder, MetaEEG, NICE, MindEyeModule, 
+                               MB2CW, Cogcap, NeV2L, WaveW, MindBridgeW, MedformerNoTSW)
+sys.path.insert(0, '/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval')
+sys.path.insert(0, '/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval/model')
 
+# Import dataset and loss function
 from data_preparing.eegdatasets import EEGDataset
 from loss import ClipLoss
 
+
 def get_model_class(model_name):
-    """根据模型名称返回对应的模型类"""
+    """Return the corresponding model class based on model name.
+    
+    Args:
+        model_name (str): Name of the model to retrieve
+        
+    Returns:
+        class: The corresponding model class
+    """
     model_mapping = {
         'MetaEEG': MetaEEG,
         'NICE': NICE,
         'EEGNetv4_Encoder': EEGNetv4_Encoder,
         'MindEyeModule': MindEyeModule,
-        'MB2CW': MB2CW,  # 添加新模型
+        'MB2CW': MB2CW,
         'Cogcap': Cogcap,
         'NeV2L': NeV2L,
         'WaveW': WaveW,
@@ -51,13 +59,40 @@ def get_model_class(model_name):
     }
     return model_mapping.get(model_name)
 
+
 def extract_id_from_string(s):
+    """Extract numerical ID from subject string (e.g., 'sub-01' -> 1).
+    
+    Args:
+        s (str): Input string containing ID
+        
+    Returns:
+        int: Extracted numerical ID or None if not found
+    """
     match = re.search(r'\d+$', s)
     if match:
         return int(match.group())
     return None
 
-def get_eegfeatures(sub, eeg_model, dataloader, device, text_features_all, img_features_all, k, eval_modality, test_classes):
+
+def get_eegfeatures(sub, eeg_model, dataloader, device, text_features_all, 
+                   img_features_all, k, eval_modality, test_classes):
+    """Evaluate EEG model performance and extract features.
+    
+    Args:
+        sub (str): Subject ID
+        eeg_model: The EEG model to evaluate
+        dataloader: DataLoader for evaluation data
+        device: Torch device (cpu or cuda)
+        text_features_all: All text features
+        img_features_all: All image features
+        k: Number of classes to evaluate against
+        eval_modality: Evaluation modality ('eeg')
+        test_classes: Total number of test classes
+        
+    Returns:
+        tuple: (average_loss, accuracy, top5_acc, labels, features_tensor)
+    """
     eeg_model.eval()
     text_features_all = text_features_all.to(device).float()
     img_features_all = img_features_all.to(device).float()
@@ -72,7 +107,8 @@ def get_eegfeatures(sub, eeg_model, dataloader, device, text_features_all, img_f
     features_tensor = torch.zeros(0, 0)
     
     with torch.no_grad():
-        for batch_idx, (_, data, labels, text, text_features, img, img_features, index, img_index, subject_id) in enumerate(dataloader):
+        for batch_idx, (_, data, labels, text, text_features, img, img_features, 
+                       index, img_index, subject_id) in enumerate(dataloader):
             data = data.to(device)
             text_features = text_features.to(device).float()
             labels = labels.to(device)
@@ -81,7 +117,6 @@ def get_eegfeatures(sub, eeg_model, dataloader, device, text_features_all, img_f
             batch_size = data.size(0) 
             subject_id = extract_id_from_string(subject_id[0])
             subject_ids = torch.full((batch_size,), subject_id, dtype=torch.long).to(device)
-            # neural_features = eeg_model(data, subject_ids)
             neural_features = eeg_model(data)
             
             logit_scale = eeg_model.logit_scale.float()            
@@ -119,16 +154,16 @@ def get_eegfeatures(sub, eeg_model, dataloader, device, text_features_all, img_f
     top5_acc = top5_correct_count / total    
     return average_loss, accuracy, top5_acc, labels, features_tensor.cpu()
 
-# =============================Configuration==================================
-test_subjects = ['sub-01', 'sub-02', 'sub-03', 'sub-04', 'sub-05', 'sub-06', 'sub-07', 'sub-08', 'sub-09', 'sub-10']
+
+# ============================= Configuration ==================================
+test_subjects = ['sub-01', 'sub-02', 'sub-03', 'sub-04', 'sub-05', 
+                'sub-06', 'sub-07', 'sub-08', 'sub-09', 'sub-10']
 device_preference = 'cuda:3'
 device_type = 'gpu'
 data_path = "/mnt/dataset0/ldy/datasets/THINGS_EEG/Preprocessed_data_250Hz"
 device = torch.device(device_preference if device_type == 'gpu' and torch.cuda.is_available() else 'cpu')
 print(f"Using device: {device}")
-# =============================Configuration==================================
-
-
+# =============================================================================
 
 # Add mode selection
 mode = MODEL_CONFIG['mode']

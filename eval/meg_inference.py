@@ -5,76 +5,88 @@ import random
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
-import sys
-# 获取当前工作目录（假设 Notebook 位于 parent_dir）
+
+# Set up project paths
 current_dir = os.getcwd()
-
-# 构建项目根目录的路径（假设 parent_dir 和 model 同级）
 project_root = os.path.abspath(os.path.join(current_dir, '..'))
-
-# 将项目根目录添加到 sys.path
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-sys.path.insert(0,'/mnt/dataset0/ldy/Workspace/EEG_Image_decode_Wrong/Retrieval')
-sys.path.insert(0,'/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval')
-sys.path.insert(0,'/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval/model')
-import sys
-sys.path.append("/mnt/dataset0/ldy/Workspace/FLORA")
+# Add additional workspace paths
+additional_paths = [
+    '/mnt/dataset0/ldy/Workspace/EEG_Image_decode_Wrong/Retrieval',
+    '/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval',
+    '/mnt/dataset0/ldy/Workspace/EEG_Image_decode/Retrieval/model',
+    '/mnt/dataset0/ldy/Workspace/FLORA'
+]
+for path in additional_paths:
+    if path not in sys.path:
+        sys.path.insert(0, path)
 
-# Configuration
+# Configuration dictionary for model settings
 MODEL_CONFIG = {
-    'model_name': 'FloraW',  # 'ATMS', 'MetaEEG', 'NICE', 'EEGNetv4_Encoder', 'MindEyeModule'
-    'mode': 'in_subject',  # 'in_subject' or 'joint'
+    'model_name': 'FloraW',  # Options: 'ATMS', 'MetaEEG', 'NICE', 'EEGNetv4_Encoder', 'MindEyeModule', etc.
+    'mode': 'in_subject',    # Options: 'in_subject' or 'joint'
 }
 
-# 根据选择的模型导入相应的类
-if MODEL_CONFIG['model_name'] == 'ATMS':
-    from ATMS_retrieval_joint_and_in_train_MEG import ATMS
-    ModelClass = ATMS
-elif MODEL_CONFIG['model_name'] == 'MetaEEG':
-    from contrast_retrieval_MEG import MetaEEG
-    ModelClass = MetaEEG
-elif MODEL_CONFIG['model_name'] == 'NICE':
-    from contrast_retrieval_MEG import NICE
-    ModelClass = NICE
-elif MODEL_CONFIG['model_name'] == 'EEGNetv4_Encoder':
-    from contrast_retrieval_MEG import EEGNetv4_Encoder
-    ModelClass = EEGNetv4_Encoder
-elif MODEL_CONFIG['model_name'] == 'MindEyeModule':
-    from contrast_retrieval_MEG import MindEyeModule
-    ModelClass = MindEyeModule
-elif MODEL_CONFIG['model_name'] == 'MB2CW':
-    from contrast_retrieval_MEG import MB2CW
-    ModelClass = MB2CW
-elif MODEL_CONFIG['model_name'] == 'CogcapW':
-    from contrast_retrieval_MEG import CogcapW
-    ModelClass = CogcapW
-elif MODEL_CONFIG['model_name'] == 'MindBridgeW':
-    from contrast_retrieval_MEG import MindBridgeW
-    ModelClass = MindBridgeW
-elif MODEL_CONFIG['model_name'] == 'WaveW':
-    from contrast_retrieval_MEG import WaveW
-    ModelClass = WaveW
-elif MODEL_CONFIG['model_name'] == 'MedformerNoTSW':
-    from contrast_retrieval_MEG import MedformerNoTSW
-    ModelClass = MedformerNoTSW
-elif MODEL_CONFIG['model_name'] == 'FloraW':
-    from contrast_retrieval_MEG import FloraW
-    ModelClass = FloraW
-else:
+# Import model class based on configuration
+model_class_mapping = {
+    'ATMS': 'ATMS_retrieval_joint_and_in_train_MEG.ATMS',
+    'MetaEEG': 'contrast_retrieval_MEG.MetaEEG',
+    'NICE': 'contrast_retrieval_MEG.NICE',
+    'EEGNetv4_Encoder': 'contrast_retrieval_MEG.EEGNetv4_Encoder',
+    'MindEyeModule': 'contrast_retrieval_MEG.MindEyeModule',
+    'MB2CW': 'contrast_retrieval_MEG.MB2CW',
+    'CogcapW': 'contrast_retrieval_MEG.CogcapW',
+    'MindBridgeW': 'contrast_retrieval_MEG.MindBridgeW',
+    'WaveW': 'contrast_retrieval_MEG.WaveW',
+    'MedformerNoTSW': 'contrast_retrieval_MEG.MedformerNoTSW',
+    'FloraW': 'contrast_retrieval_MEG.FloraW'
+}
+
+if MODEL_CONFIG['model_name'] not in model_class_mapping:
     raise ValueError(f"Unknown model type: {MODEL_CONFIG['model_name']}")
 
+# Dynamically import the selected model class
+module_name, class_name = model_class_mapping[MODEL_CONFIG['model_name']].rsplit('.', 1)
+model_module = __import__(module_name, fromlist=[class_name])
+ModelClass = getattr(model_module, class_name)
+
+# Import dataset and loss function
 from data_preparing.megdatasets_averaged import MEGDataset
 from loss import ClipLoss
 
+
 def extract_id_from_string(s):
+    """Extract numerical subject ID from string.
+    
+    Args:
+        s (str): Input string containing subject ID (e.g., 'sub-01')
+        
+    Returns:
+        int: Extracted numerical ID or None if not found
+    """
     match = re.search(r'\d+$', s)
-    if match:
-        return int(match.group())
-    return None
+    return int(match.group()) if match else None
+
 
 def get_megfeatures(sub, meg_model, dataloader, device, text_features_all, img_features_all, k, eval_modality, test_classes):
+    """Evaluate MEG features retrieval performance.
+    
+    Args:
+        sub: Subject identifier
+        meg_model: Loaded MEG model
+        dataloader: DataLoader for evaluation
+        device: Device to run computation on
+        text_features_all: All text features
+        img_features_all: All image features
+        k: Number of classes to evaluate against
+        eval_modality: Evaluation modality ('meg')
+        test_classes: Total number of test classes
+        
+    Returns:
+        tuple: (average_loss, accuracy, top5_acc, labels, features_tensor)
+    """
     meg_model.eval()
     text_features_all = text_features_all.to(device).float()
     img_features_all = img_features_all[::12].to(device).float()
@@ -98,7 +110,6 @@ def get_megfeatures(sub, meg_model, dataloader, device, text_features_all, img_f
             batch_size = data.size(0) 
             subject_id = extract_id_from_string(subject_id[0])
             subject_ids = torch.full((batch_size,), subject_id, dtype=torch.long).to(device)
-            # neural_features = meg_model(data, subject_ids) # 这一行非常重要，取决于是否要把subject id传过去
             neural_features = meg_model(data)
             
             logit_scale = meg_model.logit_scale.float()            
@@ -136,16 +147,17 @@ def get_megfeatures(sub, meg_model, dataloader, device, text_features_all, img_f
     top5_acc = top5_correct_count / total    
     return average_loss, accuracy, top5_acc, labels, features_tensor.cpu()
 
-# ========================================Configuration=============================================
+
+# ======================================== Configuration =============================================
 test_subjects = ['sub-01', 'sub-02', 'sub-03', 'sub-04']
 device_preference = 'cuda:4'
 device_type = 'gpu'
 data_path = "/home/ldy/THINGS-MEG/preprocessed_newsplit"
 device = torch.device(device_preference if device_type == 'gpu' and torch.cuda.is_available() else 'cpu')
 print(f"Using device: {device}")
-# ========================================Configuration=============================================
+# ======================================== Configuration =============================================
 
-# Add mode selection
+# Experiment setup
 mode = MODEL_CONFIG['mode']
 test_classes = 200
 eval_modality = 'meg'
@@ -169,11 +181,14 @@ print(f"Number of test classes: {test_classes}")
 print(f"Evaluation modality: {eval_modality}")
 print("="*80 + "\n")
 
+# Main evaluation loop
 for sub in test_subjects:
     print(f"\nProcessing subject: {sub}")
+    
     # Load appropriate model based on mode
     meg_model = ModelClass()
     base_path = f"/mnt/dataset1/ldy/Workspace/FLORA/models/{MODEL_CONFIG['model_name']}"
+    
     if mode == 'joint':
         across_dir = os.path.join(base_path, 'across', 'MEG')
         time_folder = os.listdir(across_dir)[0]
@@ -197,7 +212,7 @@ for sub in test_subjects:
     text_features_test_all = test_dataset.text_features    
     img_features_test_all = test_dataset.img_features
     
-    # Run evaluations
+    # Run evaluations with different k values
     test_loss, test_accuracy, top5_acc, labels, meg_features_test = get_megfeatures(
         sub, meg_model, test_loader, device, text_features_test_all, img_features_test_all, 
         k=test_classes, eval_modality=eval_modality, test_classes=test_classes
@@ -238,6 +253,7 @@ for sub in test_subjects:
     print(f" - v4 Accuracy: {v4_acc:.4f}")
     print(f" - v10 Accuracy: {v10_acc:.4f}")
 
+# Print final summary
 print("\n" + "="*80)
 print(f"EXPERIMENT SUMMARY")
 print(f"Evaluation modality: {eval_modality}")

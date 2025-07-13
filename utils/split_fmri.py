@@ -1,3 +1,12 @@
+'''
+@File    :   split_fmri.py
+@Time    :   2025/07/13 16:18:44
+@Author  :   DongyangLi
+@Version :   1.0
+@Desc    :   modified from [PAPER_NAME](https://arxiv.org/abs/XXXX.XXXXX) (CONFERENCE_ABBR'YY)
+'''
+
+
 import os
 import pickle
 from os.path import join as pjoin
