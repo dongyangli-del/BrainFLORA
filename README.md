@@ -24,7 +24,7 @@
 <div align="center">
 <!--  -->
 <div>
-<img src="fig-overview_00.png" alt="fig-genexample" style="max-width: 75%; height: auto;"/>  
+<img src="imgs/fig-overview_00.png" alt="fig-genexample" style="max-width: 75%; height: auto;"/>  
 </div>
 
 </div>
@@ -33,7 +33,7 @@ A comparative overview of visual decoding paradigms.
 
 <div align="center">
 <div>
-<img src="fig-framework_00.png" alt="Framework" style="max-width: 70%; height: auto;"/>
+<img src="imgs/fig-framework_00.png" alt="Framework" style="max-width: 70%; height: auto;"/>
 </div>
 </div>
 
