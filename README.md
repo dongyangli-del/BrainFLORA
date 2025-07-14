@@ -82,7 +82,7 @@ THINGS-Images |  [Download](https://osf.io/rdxy2)
 
 
 #### 1.Visual Retrieval
-We provide the script to train the modality encoders for ``joint subject training`` Please modify your data set path and run:
+We provide the script to train the modality encoders for ``joint subject training`` in THINGS-EEG2 dataset. Please modify your data set path and run:
 ```
 cd Retrieval/
 python retrieval_joint_train_medformer.py --logger True --gpu cuda:0  --output_dir ./outputs/contrast
