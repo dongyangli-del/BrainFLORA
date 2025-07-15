@@ -29,7 +29,7 @@
 
 </div>
 
-A comparative overview of visual decoding paradigms.
+A comparative overview of multimodal decoding paradigms.
 
 <div align="center">
 <div>
@@ -37,7 +37,7 @@ A comparative overview of visual decoding paradigms.
 </div>
 </div>
 
-Overall ArchitecNewsture of BrainFLORA.
+Overall architecture of BrainFLORA.
 
 
 
@@ -45,14 +45,15 @@ Overall ArchitecNewsture of BrainFLORA.
 <!-- ## News -->
 <h2 style="border-bottom: 1px solid lightgray; margin-bottom: 5px;">🐣 Update</h2>
 
-* **2025/07/12**, Officially released BrainFLORA.
-* **2025/07/05**, BrainFLORA is accepted by ACM MM 2025.
+* **2025/07/15**, the [arxiv](https://arxiv.org/abs/2507.09747) paper is public.
+* **2025/07/12**, we officially released the code.
+* **2025/07/05**, BrainFLORA is accepted by *ACM MM 2025*.
 
 
 <!-- ## Environment setup -->
 <h2 style="border-bottom: 1px solid lightgray; margin-bottom: 5px;">🛠️Environment setup</h2>
 
-Run ``setup.sh`` to quickly create a conda environment that contains the packages necessary to run our scripts; activate the environment with conda activate FLORA.
+Run ``setup.sh`` to quickly create a conda environment that contains the packages necessary to run our scripts; activate the environment with conda activate BrainFLORA.
 
 
 ```
@@ -62,7 +63,7 @@ Run ``setup.sh`` to quickly create a conda environment that contains the package
 You can also create a new conda environment and install the required dependencies by running
 ```
 conda env create -f environment.yml
-conda activate FLORA
+conda activate BrainFLORA
 ```
 
 <!-- ## Prepare for Dataset -->
@@ -83,7 +84,7 @@ THINGS-Images |  [Download](https://osf.io/rdxy2)
 
 
 #### 1.Visual Retrieval
-We provide the script to train the modality encoders for ``joint subject training`` in THINGS-EEG2 dataset. Please modify your data set path and run:
+We provide the script to train the modality encoders for ``joint subject training`` in *THINGS-EEG2* dataset. Please modify your data set path and run:
 ```
 cd Retrieval/
 python retrieval_joint_train_medformer.py --logger True --gpu cuda:0  --output_dir ./outputs/contrast
@@ -113,7 +114,7 @@ python FLORA_inference_reconst.py
 ```
 #### 3.Visual Captioning
 
-We provide scripts for caption generation.
+We provide scripts for visual caption generation.
 ```
 # step 1: train feature adapter
 python train_unified_encoder_highlevel_diffprior.py --modalities ['eeg', 'meg', 'fmri'] --gpu cuda:0  --output_dir ./outputs/contrast
