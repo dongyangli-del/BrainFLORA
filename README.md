@@ -10,7 +10,7 @@
 <p align="center">
   <a href="#">
   <p align="center">
-    <a href='https://arxiv.org/pdf/2403.07721'><img src='http://img.shields.io/badge/Paper-arxiv.2403.07721-B31B1B.svg'></a>
+    <a href='https://arxiv.org/abs/2507.09747'><img src='http://img.shields.io/badge/Paper-arxiv.2403.07721-B31B1B.svg'></a>
     <a href='https://huggingface.co/datasets/LidongYang/EEG_Image_decode/tree/main'><img src='https://img.shields.io/badge/BrainFLORA-%F0%9F%A4%97%20Hugging%20Face-blue'></a>
   </p>
 </p>
@@ -129,6 +129,20 @@ If you find our work useful, please consider citing:
 
 
 ```
+@article{li2025brain,
+  title={BrainFLORA: Uncovering Brain Concept Representation via Multimodal Neural Embeddings},
+  author={Li, Dongyang and Qin, Haoyang and Wu, Mingyang and Wei, Chen and Liu, Quanying},
+  journal={arXiv preprint	arXiv:2507.09747},
+  year={2025}
+}
+@article{li2024visual,
+  title={Visual Decoding and Reconstruction via EEG Embeddings with Guided Diffusion},
+  author={Li, Dongyang and Wei, Chen and Li, Shiying and Zou, Jiachen and Liu, Quanying},
+  journal={Advances in Neural Information Processing Systems},
+  volume={37},
+  pages={102822--102864},
+  year={2024}
+}
 @inproceedings{wei2024cocog,
   title={CoCoG: controllable visual stimuli generation based on human concep08/03/2024t representations},
   author={Wei, Chen and Zou, Jiachen and Heinke, Dietmar and Liu, Quanying},
