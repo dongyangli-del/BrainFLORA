@@ -46,6 +46,7 @@ Overall ArchitecNewsture of BrainFLORA.
 <h2 style="border-bottom: 1px solid lightgray; margin-bottom: 5px;">🐣 Update</h2>
 
 * **2025/07/12**, Officially released BrainFLORA.
+* **2025/07/05**, BrainFLORA is accepted by ACM MM 2025.
 
 
 <!-- ## Environment setup -->
@@ -132,7 +133,7 @@ If you find our work useful, please consider citing:
 @article{li2025brain,
   title={BrainFLORA: Uncovering Brain Concept Representation via Multimodal Neural Embeddings},
   author={Li, Dongyang and Qin, Haoyang and Wu, Mingyang and Wei, Chen and Liu, Quanying},
-  journal={arXiv preprint	arXiv:2507.09747},
+  journal={arXiv preprint arXiv:2507.09747},
   year={2025}
 }
 @article{li2024visual,
