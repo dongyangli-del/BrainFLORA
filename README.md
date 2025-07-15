@@ -134,7 +134,8 @@ If you find our work useful, please consider citing:
   title={BrainFLORA: Uncovering Brain Concept Representation via Multimodal Neural Embeddings},
   author={Li, Dongyang and Qin, Haoyang and Wu, Mingyang and Wei, Chen and Liu, Quanying},
   journal={arXiv preprint arXiv:2507.09747},
-  year={2025}
+  year={2025},
+  url={https://arxiv.org/abs/2507.09747}
 }
 @article{li2024visual,
   title={Visual Decoding and Reconstruction via EEG Embeddings with Guided Diffusion},
