@@ -159,17 +159,16 @@ If you find our work useful, please consider citing:
 <!-- ## Acknowledge -->
 <h2 style="border-bottom: 1px solid lightgray; margin-bottom: 5px;">😺Acknowledge</h2>
 
-1.Thanks to Y Song et al. for their contribution in data set preprocessing and neural network structure, we refer to their work:</br>"[Decoding Natural Images from EEG for Object Recognition](https://arxiv.org/pdf/2308.13234.pdf)".</br> Yonghao Song, Bingchuan Liu, Xiang Li, Nanlin Shi, Yijun Wang, and Xiaorong Gao. 
+1.Thanks to Y Song et al. for their contribution in data set preprocessing and neural network structure, we refer to their work:"[Decoding Natural Images from EEG for Object Recognition](https://arxiv.org/pdf/2308.13234.pdf)". Yonghao Song, Bingchuan Liu, Xiang Li, Nanlin Shi, Yijun Wang, and Xiaorong Gao. 
 
 2.We also thank the authors of [SDRecon](https://github.com/yu-takagi/StableDiffusionReconstruction) for providing the codes and the results. Some parts of the training script are based on [MindEye](https://medarc-ai.github.io/mindeye/) and [MindEye2](https://github.com/MedARC-AI/MindEyeV2). Thanks for the awesome research works.
 
-3.Here we provide the THING-EEG2 dataset cited in the paper:</br>"[A large and rich EEG dataset for modeling human visual object recognition](https://www.sciencedirect.com/science/article/pii/S1053811922008758?via%3Dihub)".</br>
-Alessandro T. Gifford, Kshitij Dwivedi, Gemma Roig, Radoslaw M. Cichy.
+3.Here we provide the THING-EEG2 dataset cited in the paper: "[A large and rich EEG dataset for modeling human visual object recognition](https://www.sciencedirect.com/science/article/pii/S1053811922008758?via%3Dihub)". Alessandro T. Gifford, Kshitij Dwivedi, Gemma Roig, Radoslaw M. Cichy.
 
 
-4.Another used THINGS-MEG and THINGS-fMRI data set provides a reference:</br>"[THINGS-data, a multimodal collection of large-scale datasets for investigating object representations in human brain and behavior](https://elifesciences.org/articles/82580.pdf)".</br> Hebart, Martin N., Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Y. Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, and Chris I. Baker.
+4.Another used THINGS-MEG and THINGS-fMRI data set provides a reference:"[THINGS-data, a multimodal collection of large-scale datasets for investigating object representations in human brain and behavior](https://elifesciences.org/articles/82580.pdf)". Hebart, Martin N., Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Y. Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, and Chris I. Baker.
 
-5.We use the </br>"[BrainHub](https://github.com/weihaox/BrainHub)".</br> for visual caption evaluation from </br>"[UMBRAE: Unified Multimodal Brain Decoding (ECCV 2024)](https://elifesciences.org/articles/82580.pdf)".</br> Xia, Weihao and de Charette, Raoul and Oztireli, Cengiz and Xue, Jing-Hao.
+5.We use the "[BrainHub](https://github.com/weihaox/BrainHub)" for visual caption evaluation from "[UMBRAE: Unified Multimodal Brain Decoding (ECCV 2024)](https://elifesciences.org/articles/82580.pdf)" Xia, Weihao and de Charette, Raoul and Oztireli, Cengiz and Xue, Jing-Hao.
 
 
 
