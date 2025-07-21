@@ -11,7 +11,7 @@
   <a href="#">
   <p align="center">
     <a href='https://arxiv.org/abs/2507.09747'><img src='http://img.shields.io/badge/Paper-arxiv.2403.07721-B31B1B.svg'></a>
-    <a href='https://huggingface.co/datasets/LidongYang/EEG_Image_decode/tree/main'><img src='https://img.shields.io/badge/BrainFLORA-%F0%9F%A4%97%20Hugging%20Face-blue'></a>
+    <a href='https://huggingface.co/datasets/LidongYang/BrainFLORA'><img src='https://img.shields.io/badge/BrainFLORA-%F0%9F%A4%97%20Hugging%20Face-blue'></a>
   </p>
 </p>
 
@@ -131,13 +131,13 @@ If you find our work useful, please consider citing:
 
 
 ```
-@article{li2025brain,
+@article{li2025brainflora,
   title={BrainFLORA: Uncovering Brain Concept Representation via Multimodal Neural Embeddings},
   author={Li, Dongyang and Qin, Haoyang and Wu, Mingyang and Wei, Chen and Liu, Quanying},
-  journal={arXiv preprint arXiv:2507.09747},
-  year={2025},
-  url={https://arxiv.org/abs/2507.09747}
+    journal={arXiv preprint arXiv:2507.09747},
+  year={2025}
 }
+
 @article{li2024visual,
   title={Visual Decoding and Reconstruction via EEG Embeddings with Guided Diffusion},
   author={Li, Dongyang and Wei, Chen and Li, Shiying and Zou, Jiachen and Liu, Quanying},
@@ -163,13 +163,13 @@ If you find our work useful, please consider citing:
 
 2.We also thank the authors of [SDRecon](https://github.com/yu-takagi/StableDiffusionReconstruction) for providing the codes and the results. Some parts of the training script are based on [MindEye](https://medarc-ai.github.io/mindeye/) and [MindEye2](https://github.com/MedARC-AI/MindEyeV2). Thanks for the awesome research works.
 
-3.Here we provide our THING-EEG2 dataset cited in the paper:</br>"[A large and rich EEG dataset for modeling human visual object recognition](https://www.sciencedirect.com/science/article/pii/S1053811922008758?via%3Dihub)".</br>
+3.Here we provide the THING-EEG2 dataset cited in the paper:</br>"[A large and rich EEG dataset for modeling human visual object recognition](https://www.sciencedirect.com/science/article/pii/S1053811922008758?via%3Dihub)".</br>
 Alessandro T. Gifford, Kshitij Dwivedi, Gemma Roig, Radoslaw M. Cichy.
 
 
-4.Another used THINGS-MEG and THINGS-fMRI data set provides a reference:</br>"[THINGS-data, a multimodal collection of large-scale datasets for investigating object representations in human brain and behavior.](https://elifesciences.org/articles/82580.pdf)".</br> Hebart, Martin N., Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Y. Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, and Chris I. Baker.
+4.Another used THINGS-MEG and THINGS-fMRI data set provides a reference:</br>"[THINGS-data, a multimodal collection of large-scale datasets for investigating object representations in human brain and behavior](https://elifesciences.org/articles/82580.pdf)".</br> Hebart, Martin N., Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Y. Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, and Chris I. Baker.
 
-
+5.We use the </br>"[BrainHub](https://github.com/weihaox/BrainHub)".</br> for visual caption evaluation from </br>"[UMBRAE: Unified Multimodal Brain Decoding (ECCV 2024)](https://elifesciences.org/articles/82580.pdf)".</br> Xia, Weihao and de Charette, Raoul and Oztireli, Cengiz and Xue, Jing-Hao.
 
 
 
