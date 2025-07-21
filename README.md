@@ -168,7 +168,7 @@ If you find our work useful, please consider citing:
 
 4.Another used THINGS-MEG and THINGS-fMRI data set provides a reference:"[THINGS-data, a multimodal collection of large-scale datasets for investigating object representations in human brain and behavior](https://elifesciences.org/articles/82580.pdf)". Hebart, Martin N., Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Y. Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, and Chris I. Baker.
 
-5.We use the "[BrainHub](https://github.com/weihaox/BrainHub)" for visual caption evaluation from "[UMBRAE: Unified Multimodal Brain Decoding (ECCV 2024)](https://elifesciences.org/articles/82580.pdf)" Xia, Weihao and de Charette, Raoul and Oztireli, Cengiz and Xue, Jing-Hao.
+5.We use the "[BrainHub](https://github.com/weihaox/BrainHub)" for visual caption evaluation from "[UMBRAE: Unified Multimodal Brain Decoding (ECCV 2024)](https://dl.acm.org/doi/abs/10.1007/978-3-031-72667-5_14)" Xia, Weihao and de Charette, Raoul and Oztireli, Cengiz and Xue, Jing-Hao.
 
 
 
