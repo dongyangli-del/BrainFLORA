@@ -29,8 +29,8 @@ cfg = OmegaConf.load(os.path.join("/mnt/dataset1/ldy/Workspace/FLORA/configs/con
 cfg = OmegaConf.structured(cfg)
 
 # Get image directories from config
-img_directory_training = cfg.megdataset.img_directory_training
-img_directory_test = cfg.megdataset.img_directory_test
+img_directory_training = cfg.eegdataset.img_directory_training
+img_directory_test = cfg.eegdataset.img_directory_test
 
 
 class EEGDataset():
